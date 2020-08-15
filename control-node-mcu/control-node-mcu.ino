@@ -10,10 +10,10 @@
 #include <FirebaseArduino.h>
 
 // Set these to run example.
-#define FIREBASE_HOST "sucre-devfest-ad6d9.firebaseio.com"
-#define FIREBASE_AUTH "Lb8n1nzOHNtu0wZiSFhJ0z4GEsm4qV5kPOPFOS1W" //firebase token
-#define WIFI_SSID "Flia. LOPEZ"
-#define WIFI_PASSWORD "NZ48E36ZYb"
+#define FIREBASE_HOST "xxxxxxxxxxxxxxxxxxx.firebaseio.com"
+#define FIREBASE_AUTH "XXXXXXXXXXXXXXXXXXXXXXXXXX" //firebase token
+#define WIFI_SSID "Namewifi"
+#define WIFI_PASSWORD "pass"
 
 int ventana = 14;
 int puerta = 12; 
