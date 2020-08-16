@@ -125,6 +125,31 @@ Edita el siguiente fracmento de codigo en el archivo `/control-node-mcu/control-
 ```
 Arma el circuito con nodeMCU 
 ![nodemcu](https://cdn-tienda.bricogeek.com/4392-thickbox_default/nodemcu-v3-esp8266.jpg)
+Toma en cuenta el digrama referencial, para conectar a los pines aducados
+![circuito](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/nodeMCU.png?raw=true)
+
+Finalmente hasta este punto todo el preyecto deberia estar funcionando correctamente
+### Explicación de Codigo
+##### Como funciona el Webhook
+Inicializamos  dialogflow client
+```
+const app = dialogflow({debug: true});
+```
+Cada Intent tiene una acción en el webhook con nodeJS, donde se especifica el nombre del Intent y los parametros que va a recibir
+```
+app.intent('actions_intent_PERMISSION', (conv, params, permissionGranted) => {
+    if (!permissionGranted) {
+      conv.ask(`Ok, no te preocupes. ¿Como te puedo ayudar?`);
+    } else {
+      conv.user.storage.userName = conv.user.name.display;
+      conv.ask(`Gracias, ${conv.user.storage.userName}. ¿Como te puedo ayudar hoy ?`);
+      
+    }
+  });
+```
+Los parametros que recibe, son las entities  realacionas con las fraces de entrenamiento del agente; sí nuestro entitie se denomia `objects` por ejemplo, los datos que contenga el entitie seran los datos reconocidos por el intent. siempre y cuando la frace de entreda, tenga la misma estructura de una de las fraces de entrenamiento del intent
+
+
 
 
 
