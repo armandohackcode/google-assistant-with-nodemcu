@@ -12,6 +12,7 @@ Para una mejor comprención veamoslo en una gráfica:
 ![diagrama de funcionamiento](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/diagrama-funcional-google-assistant-con-nodemcu.png?raw=true)
 
 Genial, ¿te interesa más ahora?, si es así, prueba nuestro demo; para eso necesitaras.
+
 ### Requisitos:
 * Una cuenta en Actions on Google (el registro es gratis)
 * Una cuenta en Firebase
@@ -148,27 +149,92 @@ app.intent('actions_intent_PERMISSION', (conv, params, permissionGranted) => {
   });
 ```
 Los parametros que recibe, son las entities  realacionas con las fraces de entrenamiento del agente; sí nuestro entitie se denomia `objects` por ejemplo, los datos que contenga el entitie seran los datos reconocidos por el intent. siempre y cuando la frace de entreda, tenga la misma estructura de una de las fraces de entrenamiento del intent
+![Fraces-de-entrenamiento](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/fraces-de-entrenamiento.png?raw=true)
 
+Cada entitie, puede contener todo un vocabulario de fraces, contra mas palabras sean agregadas, el agente tendrá mayor capacidad de identificación, asi como mas fraces de entrenamiento con diferentes estructuras, mejoerra el entendimiento de un intent de usuario, donde una palabra puede ser identificada, por su nombre principal o los sinónimos que la comprenden.
+![entities](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/entities.png?raw=true)
 
+Entonces al cuando Dialogflow identifica un Intent, en el webhook se recive de la siguiente forma
+```
+app.intent('actions_windows _and_doors', (conv, {actions,object}) => {
+    // body
+    // >actions
+    conv.ask('respuesta');
+}
+```
+`actions,object` pertenecen a los entities identificados, existen varios tipos de entities, como tambien tambien se puede realizar una estructura compuesta de entities, sin embargo eso ya es algo avanzado, y lo pueden consultar en la [documentación de dialogflow](https://cloud.google.com/dialogflow/docs/entities-overview?hl=es-419) o tambien en un video referencial [aquí](https://www.youtube.com/watch?v=x0SN8suJiSA).
 
+El parametro recibido, contenera, la palabra o frace identificada, esto nos permitira identificarla y realizar una acción a partir de ello
+```
+if(actions == 'abrir' && object== 'ventana'){
+    //actions
+}
+```
+Existen muchas formas de armar una estructura de identifición, pero para este ejemplo se muestra una de las formas más sencillas. De ahi para adelante, simplemente ya es imaginación del programador, que accionar tomar, ya sea escribir algo en base de datos, leer de base de datos, o simplemente dar una respuesta generalizada, etc.
 
+```
+ var ref = admin.database().ref('/');
+  if(actions == 'abrir' && object== 'ventana'){
+    var ventana = getWindow(ref);
+      if(ventana == 1){
+        conv.ask('Las ventanas ya estan abiertas');
+      }else{
+        conv.ask('Abriendo ventanas');
+        updateWindow(ref,1);
+        conv.ask('Las ventanas an sido abiertas');
+      }
+    }
+function getWindow(ref){
+  var ventana ;
+      ref.on("value", function(snapshot) {
+          var data = snapshot.val();
+          ventana = data.habitacion.ventana;
+        });
+  return ventana; 
+}
+function updateWindow(ref,value){
+  var usersRef = ref.child("habitacion");
+        usersRef.update({
+          ventana:value
+        });
+}
+```
+##### Como funciona el NodeMCU Controller
+Simplemente leemos y escribirmos datos en Firebase, luego de las configuraiones inicializamos rirebase en void loop de la siguiente forma
+```
+Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+```
+Leer los datos de firebase es muy sencillo, de la clase Firebase, accedemos asu metodo getInt (en caso tratarse de un dato numerico) o getString (en caso tratarse de un String) todo esto y mas puede consultar los firerentes métodos de la clase Firebase en su [documentación](https://firebase-arduino.readthedocs.io/en/latest/)
+```
+int statusVentana = Firebase.getInt("habitacion/ventana");
+```
+Se hace solo una consulta, por cada ccambio en la DB, los datos son actualizados en tiempo real.
 
+Para escribir en base de datos, de igual forma es sencillo de realizar, la funcion setInt o setString, dependiendo del tipo de dato que se desea leer se hace de la siguiente forma
 
+```
+void writeDoor(int estado){
+  Firebase.setInt("home/Door/estado", estado);
+}
+void writeTemperature(int temperatura, int estado,int ventilador){
+   Firebase.setInt("home/Temperatura/estado", estado);
+   Firebase.setInt("home/Temperatura/temperatura", temperatura);
+   Firebase.setInt("home/Temperatura/ventilador", ventilador);
+  delay(1000);
+}
+```
+La ruta, espedificada, debe ser según a la estructura existente en BD y podría variar, al cliterio del programador,` recuerda en todo momento, que debes especificar la ruta absoluta de cada dato del cual deseas leer o sobreescribir`.
 
+Genial !!!! Si llegaste a este punto ahora seras capaz de crear tu propio agente inteligente, que controle tu casa, un prototipo base de google home o domótica  y automatización.
 
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
+#### Concluciones
+- Se logró crear con exito un prototipo de bot que controla hardware mediante comandos de voz.
+- Existen muchas formas de crear una esctructura para un agente inteligente, y para un mejor desempeño del mismo se deben detallar las fraces de entrenamiento, contextos, y eventos a los cuales responde.
+- La aplicación entre en hardware y software puede escalar exponencialmente," el límite solo existe en la imaginación y habilidad del programador"
+#### Siguientes pasos
+- [Experiencias codelab](https://medium.com/orbismobile/my-experience-with-google-assistant-codelabs-and-why-you-should-also-take-them-right-now-8e7a77719d2c)
+- [Conceptos de Dialogflow](https://cloud.google.com/dialogflow/docs/concepts)
+- [Internationalization](https://medium.com/orbismobile/hello-salut-hola-internationalization-in-your-google-actions-772a63989c10)
+- [External Request](https://medium.com/orbismobile/considerations-when-making-rest-requests-in-your-actions-a98e5dc35dd9)
+- [Debugging of Actions](https://medium.com/@tohure/debugging-our-cloud-function-in-real-time-adfbf4ce3385)
 
