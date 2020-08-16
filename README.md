@@ -11,6 +11,7 @@ Para una mejor comprensión veámoslo en una gráfica:
 ![diagrama de funcionamiento](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/diagrama-funcional-google-assistant-con-nodemcu.png?raw=true)
  
 Genial, ¿te interesa más ahora?, si es así, prueba nuestro demo; para eso necesitarás.
+
  
 ### Requisitos:
 * Una cuenta en Actions on Google (el registro es gratis)
@@ -111,7 +112,7 @@ $ firebase deploy --project example-2123dds
 ```
 #####  Configuraciones para NodeMCU
 Necesitamos instalar un par de librerías en Arduino IDE para que nuestro proyecto funcione adecuadamente.
-* Intalar la libreria ESP8266 y añade los modulos de complitación para arduino [Guía de instalación](https://aprendiendoarduino.wordpress.com/2017/09/13/programacion-esp8266-con-ide-arduino/)
+* Intalar la libreria ESP8266 y añade los modulos de compilación para arduino [Guía de instalación](https://aprendiendoarduino.wordpress.com/2017/09/13/programacion-esp8266-con-ide-arduino/)
 * Descarga e instala la libreria de firebase para arduino [aquí](https://github.com/FirebaseExtended/firebase-arduino) descarga el repo en modo .zip y añadelo a ArduinoIDE
 Edita el siguiente fragmento de código en el archivo `/control-node-mcu/control-node-mcu.ino`
 ![control-mcu](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/cod-hots.png?raw=true)
@@ -152,7 +153,7 @@ Los parámetros que recibe, son las entities  relacionadas con las frases de ent
 Cada entity, puede contener todo un vocabulario de frases, contra más palabras sean agregadas, el agente tendrá mayor capacidad de identificación, así como más frases de entrenamiento con diferentes estructuras, mejora el entendimiento de un intent de usuario, donde una palabra puede ser identificada, por su nombre principal o los sinónimos que la comprenden.
 ![entities](https://github.com/armandohackcode/google-assistant-with-nodemcu/blob/developer/img/entities.png?raw=true)
  
-Entonces al cuando Dialogflow identifica un Intent, en el webhook se recibe de la siguiente forma
+Entonces  cuando Dialogflow identifica un Intent, en el webhook se recibe de la siguiente forma
 ```
 app.intent('actions_windows _and_doors', (conv, {actions,object}) => {
    // body
@@ -160,7 +161,7 @@ app.intent('actions_windows _and_doors', (conv, {actions,object}) => {
    conv.ask('respuesta');
 }
 ```
-`actions,object` pertenecen a los entities identificados, existen varios tipos de entities, como tambien tambien se puede realizar una estructura compuesta de entities, sin embargo eso ya es algo avanzado, y lo pueden consultar en la [documentación de dialogflow](https://cloud.google.com/dialogflow/docs/entities-overview?hl=es-419) o tambien en un video referencial [aquí](https://www.youtube.com/watch?v=x0SN8suJiSA).
+`actions,object` pertenecen a los entities identificados, existen varios tipos de entities, como  tambien se puede realizar una estructura compuesta de entities, sin embargo eso ya es algo avanzado, y lo pueden consultar en la [documentación de dialogflow](https://cloud.google.com/dialogflow/docs/entities-overview?hl=es-419) o tambien en un video referencial [aquí](https://www.youtube.com/watch?v=x0SN8suJiSA).
  
 El parámetro recibido, contenera, la palabra o frase identificada, esto nos permitirá identificarla y realizar una acción a partir de ello
 ```
@@ -208,7 +209,7 @@ int statusVentana = Firebase.getInt("habitacion/ventana");
 ```
 Se hace solo una consulta, por cada cambio en la DB, los datos son actualizados en tiempo real.
  
-Para escribir en base de datos, de igual forma es sencillo de realizar, la función setInt o setString, dependiendo del tipo de dato que se desea leer se hace de la siguiente forma
+Para escribir en base de datos, de igual forma es sencillo de realizar, la función setInt o setString, dependiendo del tipo de dato que se desea escribir, se hace de la siguiente forma
  
 ```
 void writeDoor(int estado){
